@@ -2,7 +2,31 @@ import React from 'react';
 import '../styles.css';
 import LinkCard from "./LinkCard";
 
+class Link {
+    socialMedia;
+    handle;
+}
+
 class Profile extends React.Component {
+    state = {
+        links: [],
+        name: '',
+        bio: ''
+    };
+
+
+    componentDidMount() {
+        fetch('http://127.0.0.1:5001/achieve-goals/us-central1/getLinks')
+            .then(value => value.json())
+            .then(value => this.setState({
+                links: value.links.map((link) =>
+                    <LinkCard key={link.id + link.socialMedia} handle={link.handle} socialMedia={link.socialMedia}/>
+                ),
+                name: value.name,
+                bio: value.bio,
+
+            }));
+    }
 
     render() {
         return (
@@ -14,15 +38,13 @@ class Profile extends React.Component {
                         <img src="https://www.pngarts.com/files/3/Avatar-PNG-High-Quality-Image.png" alt="User avatar"
                              className="w-10 h-10 rounded-full mr-4"/>
                         <div className="flex-col">
-                            <h1 className="text-3xl">Arnav Puri</h1>
-                            <h1 className="font-light text-sm text-gray-700">Developer by trade</h1>
+                            <h1 className="text-3xl">{this.state.name}</h1>
+                            <h1 className="font-light text-sm text-gray-700">{this.state.bio}</h1>
                         </div>
                     </div>
                     {/* Link card */}
-                    <LinkCard handle="thatIndianDeveloper" socialMedia="Instagram"/>
-                    <LinkCard handle="arnav_puri" socialMedia="Instagram"/>
-                    <LinkCard handle="arnavPuri" socialMedia="Twitter"/>
-                    <LinkCard handle="arnavanytime" socialMedia="Facebook"/>
+                    {/*<LinkCard handle="thatIndianDeveloper" socialMedia="Instagram"/>*/}
+                    {this.state.links}
                 </div>
                 <footer className="flex w-full fixed bottom-0 items-center text-center">
                     <p>(c) Copyright Linkogram!</p>

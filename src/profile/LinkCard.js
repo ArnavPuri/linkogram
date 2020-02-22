@@ -14,24 +14,25 @@ class LinkCard extends React.Component {
         super(props);
         this.handle = props.handle;
         this.socialMedia = props.socialMedia;
+        this.updateSuitableSVG();
+    };
+
+    updateSuitableSVG() {
         switch (this.socialMedia) {
-            case "Instagram":
+            case "instagram":
                 this.svgPath = Constants.instagramSVG;
                 break;
-            case "Twitter":
+            case "twitter":
                 this.svgPath = Constants.twitterSVG;
                 break;
-            case "Facebook":
+            case "facebook":
                 this.svgPath = Constants.facebookSVG;
                 break;
             default:
                 this.svgPath = Constants.instagramSVG;
                 break;
         }
-        if (this.socialMedia === 'Twitter') {
-            this.svgPath = Constants.twitterSVG
-        }
-    };
+    }
 
     onMouseOver = () => this.setState({isHover: true});
     onMouseOut = () => this.setState({isHover: false});
@@ -42,8 +43,7 @@ class LinkCard extends React.Component {
             onMouseOver={this.onMouseOver} onMouseOut={this.onMouseOut}>
             <svg className="fill-current w-4 mr-2" xmlns="http://www.w3.org/2000/svg"
                  viewBox="0 0 32 32">
-                <path
-                    d={this.svgPath}></path>
+                <path d={this.svgPath}/>
             </svg>
             <h1 className="text-sm">{this.handle}</h1>
         </div>
