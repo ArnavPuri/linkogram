@@ -39,7 +39,7 @@ class LinkCard extends React.Component {
 
     render() {
         return <div
-            className={`rounded-lg overflow-hidden bg-white flex items-center px-4 py-6 my-2  min-w-full ${this.state.isHover ? 'shadow-md' : 'shadow-2xl'}`}
+            className={`rounded-lg overflow-hidden bg-white flex items-center px-4 py-6 my-2  min-w-full ${this.state.isHover ? 'shadow-md' : 'shadow-xl'}`}
             onMouseOver={this.onMouseOver} onMouseOut={this.onMouseOut}>
             <svg className="fill-current w-4 mr-2" xmlns="http://www.w3.org/2000/svg"
                  viewBox="0 0 32 32">
