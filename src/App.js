@@ -21,8 +21,9 @@ function App() {
 
                 </ul>
                 <Switch>
-                    <Route path="/profile" component={Profile}/>
-                    <Route path="/edit" component={AddLinkCard}/>
+                    <Route exact path="/edit" component={AddLinkCard}/>
+                    <Route path="/:id" component={Profile}/>
+
                 </Switch>
                 <footer className="w-full fixed bottom-0 text-center">
                     <p className="text-red-300 text-sm">(c) Copyright Linkogram</p>

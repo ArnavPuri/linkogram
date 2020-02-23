@@ -7,6 +7,7 @@ class AddLinkCard extends React.Component {
             handle: '',
             socialMedia: 'instagram',
             handleError: false,
+            userID: props.location.userID
         };
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -25,7 +26,8 @@ class AddLinkCard extends React.Component {
         console.log('Data was submitted: ' + this.state.socialMedia + this.state.handle);
         let _data = {
             handle: this.state.handle,
-            socialMedia: this.state.socialMedia
+            socialMedia: this.state.socialMedia,
+            userID: this.state.userID
         };
         console.log(_data);
         // const response = await axios.post('http://127.0.0.1:5001/achieve-goals/us-central1/saveLink', JSON.stringify({hi: "Hi"}), {headers: {'Content-Type': 'application/json'}});
@@ -37,7 +39,7 @@ class AddLinkCard extends React.Component {
                 headers: {'Content-Type': 'application/json'},
             });
         console.log(response.status);
-        this.props.history.push('/profile');
+        this.props.history.push(`/${this.state.userID}`);
         event.preventDefault();
     }
 
