@@ -1,6 +1,6 @@
 import React from "react";
 import './styles.css'
-import Constants from "./constants";
+import Constants from "../constants";
 
 class LinkCard extends React.Component {
     handle = 'thatIndianDeveloper';
@@ -42,6 +42,12 @@ class LinkCard extends React.Component {
             case "facebook":
                 this.svgPath = Constants.facebookSVG;
                 break;
+            case "github":
+                this.svgPath = Constants.githubSVG;
+                break;
+            case "youtube":
+                this.svgPath = Constants.youtubeSVG;
+                break;
             default:
                 this.svgPath = Constants.instagramSVG;
                 break;
@@ -54,7 +60,7 @@ class LinkCard extends React.Component {
     async handleClick(e) {
         console.log(this.linkID);
         //    http://localhost:5001/achieve-goals/us-central1/deleteLink
-        const response = await fetch('http://localhost:5001/achieve-goals/us-central1/deleteLink',
+        const response = await fetch(Constants.baseURL + 'deleteLink',
             {
                 method: 'POST',
                 mode: "no-cors", // TODO remove cors later

@@ -2,6 +2,7 @@ import React from 'react';
 import '../styles.css';
 import LinkCard from "./LinkCard";
 import {Link} from "react-router-dom";
+import Constants from "../constants";
 
 class Profile extends React.Component {
 
@@ -34,7 +35,8 @@ class Profile extends React.Component {
     }
 
     async getLinks() {
-        let response = await fetch(`http://127.0.0.1:5001/achieve-goals/us-central1/getLinks?id=${this.state.userID}`);
+
+        let response = await fetch(`${Constants.baseURL}/getLinks?id=${this.state.userID}`);
         console.log(response);
         if (response.status !== 200) {
             this.setState({
@@ -54,7 +56,6 @@ class Profile extends React.Component {
     }
 
     render() {
-        const backURL = `/${this.state.userID}`;
         return (
 
             <div className="flex flex-col mx-auto my-16 items-center">

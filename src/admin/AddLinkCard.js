@@ -1,4 +1,5 @@
 import React from "react";
+import Constants from "../constants";
 
 class AddLinkCard extends React.Component {
     constructor(props) {
@@ -30,8 +31,7 @@ class AddLinkCard extends React.Component {
             userID: this.state.userID
         };
         console.log(_data);
-        // const response = await axios.post('http://127.0.0.1:5001/achieve-goals/us-central1/saveLink', JSON.stringify({hi: "Hi"}), {headers: {'Content-Type': 'application/json'}});
-        const response = await fetch('http://127.0.0.1:5001/achieve-goals/us-central1/saveLink',
+        const response = await fetch(Constants.baseURL + 'saveLink',
             {
                 method: 'POST',
                 mode: "no-cors", // TODO remove cors later
@@ -61,6 +61,7 @@ class AddLinkCard extends React.Component {
                                 <option value='twitter'>Twitter</option>
                                 <option value='facebook'>Facebook</option>
                                 <option value='youtube'>Youtube</option>
+                                <option value='github'>Github</option>
                             </select>
                             <div
                                 className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">

@@ -3,6 +3,7 @@ import './styles.css';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import Profile from "./profile";
 import AddLinkCard from "./admin";
+import SignUp from "./auth/Signup";
 
 function App() {
     return (
@@ -22,6 +23,7 @@ function App() {
                 </ul>
                 <Switch>
                     <Route exact path="/edit" component={AddLinkCard}/>
+                    <Route exact path="/" component={SignUp}/>
                     <Route path="/:id" component={Profile}/>
 
                 </Switch>
