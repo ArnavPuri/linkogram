@@ -60,14 +60,13 @@ class LinkCard extends React.Component {
     async handleClick(e) {
         console.log(this.linkID);
         //    http://localhost:5001/achieve-goals/us-central1/deleteLink
-        const response = await fetch(Constants.baseURL + 'deleteLink',
+        const response = await fetch(Constants.baseURL + '/deleteLink',
             {
                 method: 'POST',
                 mode: "no-cors", // TODO remove cors later
                 body: JSON.stringify({"linkID": this.linkID}),
                 headers: {'Content-Type': 'application/json'},
             });
-        console.log(response.status);
         this.onDelete(this.linkID);
     };
 

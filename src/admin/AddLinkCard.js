@@ -15,6 +15,7 @@ class AddLinkCard extends React.Component {
 
 
     async handleSubmit(event) {
+        event.preventDefault();
         if (this.state.handle === '') {
             this.setState({
                 handleError: true
@@ -24,23 +25,19 @@ class AddLinkCard extends React.Component {
         this.setState({
             handleError: false
         });
-        console.log('Data was submitted: ' + this.state.socialMedia + this.state.handle);
         let _data = {
             handle: this.state.handle,
             socialMedia: this.state.socialMedia,
             userID: this.state.userID
         };
-        console.log(_data);
-        const response = await fetch(Constants.baseURL + 'saveLink',
+        await fetch(Constants.baseURL + '/saveLink',
             {
                 method: 'POST',
                 mode: "no-cors", // TODO remove cors later
                 body: JSON.stringify(_data),
                 headers: {'Content-Type': 'application/json'},
             });
-        console.log(response.status);
         this.props.history.push(`/${this.state.userID}`);
-        event.preventDefault();
     }
 
     render() {
@@ -87,7 +84,6 @@ class AddLinkCard extends React.Component {
                             Please provide suitable username
                         </p>
                         }
-
                     </div>
                     <div className="flex items-center justify-end">
                         <button

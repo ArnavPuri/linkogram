@@ -35,15 +35,7 @@ class Profile extends React.Component {
     }
 
     async getLinks() {
-
         let response = await fetch(`${Constants.baseURL}/getLinks?id=${this.state.userID}`);
-        console.log(response);
-        if (response.status !== 200) {
-            this.setState({
-                name: "USER NOT FOUND"
-            });
-            return
-        }
         let resData = await response.json();
         this.setState({
             links: resData.links.map((link) =>
@@ -53,6 +45,11 @@ class Profile extends React.Component {
             name: resData.name,
             bio: resData.bio,
         });
+        if (response.status !== 200) {
+            this.setState({
+                name: "USER NOT FOUND"
+            });
+        }
     }
 
     render() {
@@ -61,9 +58,9 @@ class Profile extends React.Component {
             <div className="flex flex-col mx-auto my-16 items-center">
                 {/* Name card */}
                 <div
-                    className="flex flex-row max-w-md rounded-lg shadow-lg bg-white items-center px-4 py-4 mb-4">
+                    className="flex flex-row rounded-lg shadow-lg bg-white items-center px-4 py-4 mb-4">
                     <img src="https://pbs.twimg.com/profile_images/1138261784106680321/nzg-HuA__400x400.jpg"
-                         alt="User avatar"
+                         alt={this.state.name}
                          className="w-10 h-10 rounded-full mr-4"/>
                     <div className="flex-col">
                         <h1 className="text-3xl">{this.state.name}</h1>
@@ -80,13 +77,13 @@ class Profile extends React.Component {
                         userID: this.state.userID
                     }}>
                     <div
-                        className="rounded-lg overflow-hidden shadow-sm cursor-pointer bg-white flex flex-col items-center text-center px-4 py-4 my-2 min-w-full">
-                        <svg className=" fill-current text-gray-700 text-center w-8" xmlns="http://www.w3.org/2000/svg"
+                        className="rounded-lg overflow-hidden shadow-sm cursor-pointer bg-white flex flex-col items-center text-center px-4 py-4 my-2 min-w-full  text-gray-500 hover:text-gray-700">
+                        <svg className=" fill-current text-center w-8" xmlns="http://www.w3.org/2000/svg"
                              viewBox="0 0 32 32">
-                            <path className="text-gray-500"
-                                  d='M20.625 11.25h-7.875v-7.875h-1.5v7.875h-7.875v1.5h7.875v7.875h1.5v-7.875h7.875v-1.5z'/>
+                            <path
+                                d='M20.625 11.25h-7.875v-7.875h-1.5v7.875h-7.875v1.5h7.875v7.875h1.5v-7.875h7.875v-1.5z'/>
                         </svg>
-                        <p className="text-sm text-gray-500">Add New Link</p>
+                        <p className="text-sm">Add New Link</p>
                     </div>
                 </Link>
             </div>

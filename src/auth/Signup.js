@@ -8,8 +8,9 @@ class SignUp extends React.Component {
             error: '',
             handle: '',
             email: '',
-            password: ''
-        }
+            password: '',
+            name: ''
+        };
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
@@ -18,23 +19,22 @@ class SignUp extends React.Component {
         let _data = {
             handle: this.state.handle,
             email: this.state.email,
+            name: this.state.name,
             password: this.state.password
         };
         console.log(_data);
-        const response = await fetch(Constants.baseURL + '/signup',
+        await fetch(Constants.baseURL + '/signup',
             {
                 method: 'POST',
                 mode: "no-cors", // TODO remove cors later
                 body: JSON.stringify(_data),
                 headers: {'Content-Type': 'application/json'},
-            });
-        console.log(response.statusText);
-        console.log(response.status);
-        console.log(response.body);
-        if (response.status !== 200) {
-            this.setState({error: response.body})
-        }
-
+            }).then(res => {
+            if (res.status !== 200) {
+                this.setState({error: res.body})
+            }
+            this.props.history.push(`/${this.state.handle}`);
+        });
     }
 
     render() {
@@ -49,6 +49,15 @@ class SignUp extends React.Component {
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         id="username" type="text" placeholder="Username"
                         onChange={(e) => this.setState({handle: e.target.value})}/>
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
+                        Name
+                    </label>
+                    <input
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="name" type="text" placeholder="Name"
+                        onChange={(e) => this.setState({name: e.target.value})}/>
                 </div>
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
