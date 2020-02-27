@@ -40,7 +40,7 @@ class Profile extends React.Component {
         this.setState({
             links: resData.links.map((link) =>
                 <LinkCard key={link.id} handle={link.handle} socialMedia={link.socialMedia}
-                          isAdmin={this.state.isAdmin} linkID={link.id} onDelete={this.onDelete}/>
+                          isAdmin={this.state.isAdmin} linkID={link.id} onDelete={this.onDelete} isEditing={true}/>
             ),
             name: resData.name,
             bio: resData.bio,
@@ -55,7 +55,7 @@ class Profile extends React.Component {
     render() {
         return (
 
-            <div className="flex flex-col mx-auto my-16 items-center">
+            <div className="flex flex-col my-12 sm:w-full px-4 lg:w-auto lg:mx-auto">
                 {/* Name card */}
                 <div
                     className="flex flex-row rounded-lg shadow-lg bg-white items-center px-4 py-4 mb-4">
