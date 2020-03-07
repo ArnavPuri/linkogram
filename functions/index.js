@@ -3,6 +3,8 @@ const firebaseAdmin = require('firebase-admin');
 const express = require('express');
 const firebase = require('firebase');
 const dotenv = require('dotenv');
+const cors = require('cors');
+
 dotenv.config();
 
 firebaseAdmin.initializeApp();
@@ -21,7 +23,7 @@ let firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 // export GOOGLE_APPLICATION_CREDENTIALS="/Users/arnavpuri/Downloads/firebase_key.json"
-
+app.use(cors());
 app.get(
     '/getLinks',
     async (req, response) => {
@@ -82,10 +84,29 @@ app.post(
     })
 );
 
+app.post(
+    '/updateLink',
+    (async (request, response) => {
+        let requestData = request.body;
+        let token = requestData.token;
+        try {
+            let decodedIdToken = await firebaseAdmin.auth().verifyIdToken(token);
+            let userRecord = await firebaseAdmin.auth().getUser(decodedIdToken.uid);
+            let email = userRecord.email;
+            let userSnapshots = await db.collection('users').where('email', '==', email).get();
+            let linksRef = userSnapshots.docs[0].ref.collection('social_links').doc(requestData.linkID);
 
-app.post('/signup', (req, res) => {
-    res.set('Access-Control-Allow-Origin', '*');
-    let requestData = JSON.parse(req.body);
+            await linksRef.set({handle: requestData.newHandle}, {merge: true});
+            return response.status(200).send({response: "ID Updated"});
+        } catch (e) {
+            console.log(e);
+            return response.status(201).send({response: e});
+        }
+    })
+);
+
+app.post('/signup', async (req, res) => {
+    let requestData = req.body;
     const newUser = {
         email: requestData.email,
         password: requestData.password,
@@ -94,18 +115,14 @@ app.post('/signup', (req, res) => {
     };
     /// TODO send proper response back to app
     let token, userId;
-    db.doc(`/users/${newUser.handle}`).get()
-        .then(document => {
-            if (document.exists) {
-                return res.status(400).json({'response': "This username is already taken"})
-            }
-            return firebase.auth()
-                .createUserWithEmailAndPassword(newUser.email, newUser.password);
-        }).then(data => {
-        userId = data.user.uid;
-        return data.user.getIdToken();
-    }).then(idtoken => {
-        token = idtoken;
+    let userDocument = await db.doc(`/users/${newUser.handle}`).get();
+    if (userDocument.exists) {
+        return res.status(200).send(JSON.stringify({response: "This username is already taken"}))
+    }
+    try {
+        let userCredential = await firebase.auth().createUserWithEmailAndPassword(newUser.email, newUser.password);
+        userId = userCredential.user.uid;
+        token = userCredential.user.getIdToken();
         const userCredentials = {
             handle: newUser.handle,
             email: newUser.email,
@@ -113,19 +130,48 @@ app.post('/signup', (req, res) => {
             name: newUser.name,
             userId
         };
-        return db.doc(`/users/${newUser.handle}`).set(userCredentials);
-    }).then(() => {
-        return res.status(201).json({'response': token});
-    })
-        .catch(err => {
-            if (err.code === 'auth/email-already-in-use') {
-                return res.status(400).json({email: 'Email is already is use'});
-            } else {
-                return res
-                    .status(500)
-                    .json({general: 'Something went wrong, please try again'});
-            }
-        });
+        await db.doc(`/users/${newUser.handle}`).set(userCredentials);
+        return res.status(201).send({response: token});
+    } catch (err) {
+        console.log('Error in signup ' + err);
+        if (err.code === 'auth/email-already-in-use') {
+            return res.status(200).send({response: 'Email is already is use'});
+        } else {
+            return res
+                .status(200)
+                .send({response: 'Something went wrong, please try again'});
+        }
+    }
 });
 
+app.post('/login', async (req, res) => {
+    let requestData = req.body;
+    const newUser = {
+        email: requestData.email,
+        password: requestData.password,
+    };
+    console.log(requestData);
+    /// TODO send proper response back to app
+    try {
+        let userCredential = await firebase.auth().signInWithEmailAndPassword(newUser.email, newUser.password);
+        let token = await userCredential.user.getIdToken();
+        return res.status(200).send({response: token});
+    } catch
+        (error) {
+        console.log(`Login failed with error ${error}`);
+        return res.status(201).send({response: `Error: ${error.code}`});
+    }
+
+
+});
+
+app.post('/getUser', async (req, res) => {
+    let requestData = req.body;
+    let token = requestData.token;
+    let decodedIdToken = await firebaseAdmin.auth().verifyIdToken(token);
+    let userRecord = await firebaseAdmin.auth().getUser(decodedIdToken.uid);
+    let email = userRecord.email;
+    let snapshots = await db.collection('users').where('email', '==', email).get();
+    return res.status(200).send(snapshots.docs[0].data())
+});
 exports.api = functions.https.onRequest(app);

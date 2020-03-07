@@ -35,6 +35,7 @@ class Profile extends React.Component {
     }
 
     async getLinks() {
+        console.log('Get Links');
         let response = await fetch(`${Constants.baseURL}/getLinks?id=${this.state.userID}`);
         let resData = await response.json();
         this.setState({
